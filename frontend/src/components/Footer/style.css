@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300&display=swap');
+
+.footer {
+    text-align: left;
+}
+
+.text-footer-1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 36px;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.text-footer-2 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 18px;
+    color: white;
+}

@@ -1,0 +1,124 @@
+.table {
+  margin-top: 286px;
+  margin-bottom: 120px;
+}
+
+.header-table {
+  display: flex;
+  gap: 40px;
+}
+
+.search-name-wrapper {
+  height: 48px;
+}
+
+.search {
+  width: 323px;
+  height: 52px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+}
+
+.search::placeholder {
+  font-family: "VT323";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 18px;
+  color: white;
+}
+
+.filter-by-tag {
+  width: 323px;
+  height: 48px;
+}
+
+label[data-shrink="false"]
+  + .MuiInputBase-formControl
+  .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+  color: #ffffff !important;
+}
+
+.css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+  color: #ffffff !important;
+}
+
+.css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
+  color: #ffffff !important;
+}
+
+.convert-currency {
+  width: 172px;
+}
+
+.confirm-filter {
+  color: white;
+  width: 48px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  background: #000000;
+  justify-content: center;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+label[data-shrink="false"]
+  + .MuiInputBase-formControl
+  .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  border: 1px solid #ffffff;
+}
+
+.css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root {
+  border: 1px solid #ffffff;
+  color: white;
+}
+
+.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  color: white;
+}
+
+.table-wrapper {
+  margin-top: 32px;
+}
+
+.css-11xur9t-MuiPaper-root-MuiTableContainer-root {
+  background-color: black !important;
+}
+
+.css-1ygcj2i-MuiTableCell-root,
+.css-1ex1afd-MuiTableCell-root {
+  color: white !important;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.pagination ul {
+  color: white;
+  display: flex;
+  list-style: none;
+  gap: 15px;
+}
+.pagination li {
+  cursor: pointer;
+}
+.pagination li:hover {
+  background-color: chocolate;
+  border-radius: 50%;
+}
+.selected {
+  background-color: red;
+  border-radius: 50%;
+}
