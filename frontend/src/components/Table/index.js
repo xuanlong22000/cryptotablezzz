@@ -12,20 +12,29 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { faAngleUp, faCheck, faHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleUp,
+  faHeart,
+  faList,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import { coin, data } from "../../cryptoSlice";
-import ReactPaginate from 'react-paginate';
+import ReactPaginate from "react-paginate";
 import "./style.css";
+
+const selectBox = [10, 20, 50, 100];
 
 const Tablez = () => {
   const [tag, setTag] = useState("");
   const [convert, setConvert] = useState("");
+  const [numberRow, setNumberRow] = useState(10);
   const [inputSearch, setInputSearch] = useState("");
   const dataz = useSelector(data);
   const coinz = useSelector(coin);
-  const [watchList, setWatchList] = useState([])
-  const [toggleWatchList, setToggleWatchList] = useState(false)
+  const [watchList, setWatchList] = useState([]);
+  const [toggleWatchList, setToggleWatchList] = useState(false);
+  const [itemOffset, setItemOffset] = useState(0);
 
   const [dataInit, setDataInit] = useState([]);
   const [listTag, setListTag] = useState([]);
@@ -38,7 +47,6 @@ const Tablez = () => {
   const [changeSort24hVolum, setChangeSort24hVolum] = useState(true);
   const [changeSortCirculing, setChangeSortCirculing] = useState(true);
 
-
   useEffect(() => {
     const newArray = dataz.map((item) => item.tags).flat();
 
@@ -46,12 +54,27 @@ const Tablez = () => {
     setListTag([...new Set(newArray)]);
   }, [dataz]);
 
+  useEffect(() => {
+    if (toggleWatchList) {
+      setDataInit(watchList);
+      setItemOffset(0);
+    } else {
+      setDataInit(dataz);
+      setItemOffset(0);
+    }
+  }, [toggleWatchList]);
+
   const handleChangeTag = (event) => {
     setTag(event.target.value);
     setDataInit(dataz);
     setDataInit(dataz.filter((item) => item.tags.includes(event.target.value)));
+    setItemOffset(0);
 
     if (event.target.value === null) setDataInit(dataz);
+  };
+
+  const handleChangeMaxRow = (e) => {
+    setNumberRow(e.target.value);
   };
 
   const handleChangeConvert = (event) => {
@@ -62,13 +85,7 @@ const Tablez = () => {
   };
 
   const handleWatchList = () => {
-    setToggleWatchList(!toggleWatchList)
-
-    if (toggleWatchList) {
-      setDataInit(watchList)
-    } else {
-      setDataInit(dataz)
-    }
+    setToggleWatchList(!toggleWatchList);
   };
 
   const handleSortPrice = () => {
@@ -161,19 +178,15 @@ const Tablez = () => {
       item.symbol.toLowerCase().includes(inputSearch.toLowerCase())
   );
 
-  const [itemOffset, setItemOffset] = useState(0);
-
-
-  const endOffset = itemOffset + 10;
+  const endOffset = itemOffset + numberRow;
   const currentItems = filterSearch.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(filterSearch.length / 10);
+  const pageCount = Math.ceil(filterSearch.length / numberRow);
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * 10) % filterSearch.length;
+    const newOffset = (event.selected * numberRow) % filterSearch.length;
 
     setItemOffset(newOffset);
   };
-
 
   return (
     <div className="table">
@@ -185,6 +198,7 @@ const Tablez = () => {
             value={inputSearch}
             onChange={(e) => setInputSearch(e.target.value)}
           />
+          <FontAwesomeIcon className="glass-icon" icon={faMagnifyingGlass} />
         </div>
         <div className="filter-by-tag">
           <Box sx={{ minWidth: 120 }}>
@@ -207,6 +221,7 @@ const Tablez = () => {
             </FormControl>
           </Box>
         </div>
+
         <div className="convert-currency">
           <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
@@ -227,8 +242,28 @@ const Tablez = () => {
             </FormControl>
           </Box>
         </div>
+        <div className="select-number">
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                Select Number
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={numberRow}
+                label="Filter by tag"
+                onChange={handleChangeMaxRow}
+              >
+                {selectBox.map((item) => (
+                  <MenuItem value={item}>{item}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </div>
         <div className="confirm-filter" onClick={handleWatchList}>
-          <FontAwesomeIcon icon={faCheck} />
+          <FontAwesomeIcon icon={faList} />
         </div>
       </div>
       <div className="table-wrapper">
@@ -285,13 +320,21 @@ const Tablez = () => {
                 <TableRow
                   key={row.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-
                 >
-
-                  <TableCell component="th" scope="row" onClick={() => setWatchList([...new Set([...watchList, row])])}>
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    onClick={() =>
+                      setWatchList([...new Set([...watchList, row])])
+                    }
+                  >
                     <FontAwesomeIcon icon={faHeart} />
                   </TableCell>
-                  <TableCell component="th" scope="row" onClick={() => handleOpenTab(row.slug)}>
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    onClick={() => handleOpenTab(row.slug)}
+                  >
                     {row.id}
                   </TableCell>
                   <TableCell onClick={() => handleOpenTab(row.slug)}>
@@ -304,12 +347,30 @@ const Tablez = () => {
                       <span>{row.name}</span>
                     </div>
                   </TableCell>
-                  <TableCell onClick={() => handleOpenTab(row.slug)}>{row.quote.USD.price}</TableCell>
-                  <TableCell onClick={() => handleOpenTab(row.slug)}>{row.quote.USD.percent_change_24h}</TableCell>
-                  <TableCell onClick={() => handleOpenTab(row.slug)}>{row.quote.USD.percent_change_7d}</TableCell>
-                  <TableCell onClick={() => handleOpenTab(row.slug)}>{row.quote.USD.market_cap}</TableCell>
-                  <TableCell onClick={() => handleOpenTab(row.slug)}>{row.quote.USD.volume_24h}</TableCell>
-                  <TableCell onClick={() => handleOpenTab(row.slug)}>{row.circulating_supply}</TableCell>
+                  <TableCell onClick={() => handleOpenTab(row.slug)}>
+                    {row.quote.USD.price.toFixed(2)}
+                  </TableCell>
+                  <TableCell
+                    className="C24h"
+                    onClick={() => handleOpenTab(row.slug)}
+                  >
+                    {row.quote.USD.percent_change_24h.toFixed(2)}%
+                  </TableCell>
+                  <TableCell
+                    className="C7d"
+                    onClick={() => handleOpenTab(row.slug)}
+                  >
+                    {row.quote.USD.percent_change_7d.toFixed(2)}%
+                  </TableCell>
+                  <TableCell onClick={() => handleOpenTab(row.slug)}>
+                    ${row.quote.USD.market_cap}
+                  </TableCell>
+                  <TableCell onClick={() => handleOpenTab(row.slug)}>
+                    ${row.quote.USD.volume_24h}
+                  </TableCell>
+                  <TableCell onClick={() => handleOpenTab(row.slug)}>
+                    {row.circulating_supply}
+                  </TableCell>
                   <TableCell onClick={() => handleOpenTab(row.slug)}>
                     <img
                       src={`https://s3.coinmarketcap.com/generated/sparklines/web/7d/2781/${row.id}.svg`}
@@ -323,15 +384,17 @@ const Tablez = () => {
         </TableContainer>
       </div>
       <div className="pagination">
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel=" >"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={pageCount}
-          previousLabel="< "
-          renderOnZeroPageCount={null}
-        />
+        {currentItems.length < 100 && (
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel=" >"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+            previousLabel="< "
+            renderOnZeroPageCount={null}
+          />
+        )}
       </div>
     </div>
   );
