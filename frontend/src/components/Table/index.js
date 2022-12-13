@@ -15,7 +15,6 @@ import Paper from "@mui/material/Paper";
 import {
   faAngleUp,
   faHeart,
-  faList,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
@@ -35,6 +34,7 @@ const Tablez = () => {
   const [watchList, setWatchList] = useState([]);
   const [toggleWatchList, setToggleWatchList] = useState(false);
   const [itemOffset, setItemOffset] = useState(0);
+  const [listActive, setListActive] = useState([]);
 
   const [dataInit, setDataInit] = useState([]);
   const [listTag, setListTag] = useState([]);
@@ -263,7 +263,7 @@ const Tablez = () => {
           </Box>
         </div>
         <div className="confirm-filter" onClick={handleWatchList}>
-          <FontAwesomeIcon icon={faList} />
+          <FontAwesomeIcon icon={faHeart} />
         </div>
       </div>
       <div className="table-wrapper">
@@ -316,19 +316,34 @@ const Tablez = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {currentItems.map((row) => (
+              {currentItems.map((row, index) => (
                 <TableRow
                   key={row.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    onClick={() =>
-                      setWatchList([...new Set([...watchList, row])])
-                    }
-                  >
-                    <FontAwesomeIcon icon={faHeart} />
+                  <TableCell component="th" scope="row">
+                    <FontAwesomeIcon
+                      className={
+                        listActive.includes(row.id)
+                          ? "heartIconActive"
+                          : "heartIcon"
+                      }
+                      icon={faHeart}
+                      onClick={() => {
+                        if (listActive.includes(row.id)) {
+                          setListActive(
+                            listActive.filter((item) => item !== row.id)
+                          );
+
+                          setWatchList(
+                            watchList.filter((item) => item.id !== row.id)
+                          );
+                        } else {
+                          setWatchList([...new Set([...watchList, row])]);
+                          setListActive([...new Set([...listActive, row.id])]);
+                        }
+                      }}
+                    />
                   </TableCell>
                   <TableCell
                     component="th"
@@ -351,13 +366,21 @@ const Tablez = () => {
                     {row.quote.USD.price.toFixed(2)}
                   </TableCell>
                   <TableCell
-                    className="C24h"
+                    className={
+                      row.quote.USD.percent_change_24h.toFixed(2).includes("-")
+                        ? "C24h-"
+                        : "C24h"
+                    }
                     onClick={() => handleOpenTab(row.slug)}
                   >
                     {row.quote.USD.percent_change_24h.toFixed(2)}%
                   </TableCell>
                   <TableCell
-                    className="C7d"
+                    className={
+                      row.quote.USD.percent_change_7d.toFixed(2).includes("-")
+                        ? "C7d-"
+                        : "C7d"
+                    }
                     onClick={() => handleOpenTab(row.slug)}
                   >
                     {row.quote.USD.percent_change_7d.toFixed(2)}%

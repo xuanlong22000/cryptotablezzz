@@ -3,16 +3,16 @@ import axios from "axios";
 
 const initialState = {
   data: [],
-  coin: []
+  coin: [],
 };
 
 export const getData = createAsyncThunk("getData/crypto", async () => {
-  const response = await axios.get("http://localhost:3001/posts");
+  const response = await axios.get("http://172.16.2.39:3001/posts");
   return response.data;
 });
 
 export const getCoin = createAsyncThunk("getCoin/crypto", async () => {
-  const response = await axios.get("http://localhost:3001/posts/coin");
+  const response = await axios.get("http://172.16.2.39:3001/posts/coin");
   return response.data;
 });
 
@@ -46,6 +46,5 @@ export const cryptoSlice = createSlice({
 
 export const data = (state) => state.crypto.data;
 export const coin = (state) => state.crypto.coin;
-
 
 export default cryptoSlice.reducer;
